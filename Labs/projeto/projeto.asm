@@ -1,4 +1,98 @@
+.section .data
+    select:
+        .word 1
+        .word 2
+        .word 3
+        .word 4
+        .word 5
+        .word 6
+        .word 7
+        .word 8
+        .word 9
+        .word 10
+
 .section .text
+
+printMenu:
+    .rodata
+.menu:
+    .word 0x23232323
+    .word 0x23232323
+    .word 0x23232323
+    .word 0x23232323
+    .word 0x23232323
+    .word 0x23232323
+    .word 0x23232323
+    .word 0x23232323
+    .word 0x6f72500a
+    .word 0x6f74656a
+    .word 0x34434d20
+    .word 0x2d203430
+    .word 0x20415220
+    .word 0x38383631
+    .word 0x65203833
+    .word 0x20415220
+    .word 0x37373831
+    .word 0x0a0a3339
+    .word 0x6f637345
+    .word 0x2061686c
+    .word 0x20616d75
+    .word 0x7265706f
+    .word 0x6f616361
+    .word 0x20310a3a
+    .word 0x6f53202d
+    .word 0x320a616d
+    .word 0x53202d20
+    .word 0x72746275
+    .word 0x6f616361
+    .word 0x2d20330a
+    .word 0x6c754d20
+    .word 0x6c706974
+    .word 0x63616369
+    .word 0x340a6f61
+    .word 0x44202d20
+    .word 0x73697669
+    .word 0x350a6f61
+    .word 0x42202d20
+    .word 0x2d206e69
+    .word 0x6548203e
+    .word 0x20360a78
+    .word 0x6548202d
+    .word 0x3e2d2078
+    .word 0x6e694220
+    .word 0x2d20370a
+    .word 0x63654420
+    .word 0x203e2d20
+    .word 0x0a786548
+    .word 0x202d2038
+    .word 0x20786548
+    .word 0x44203e2d
+    .word 0x390a6365
+    .word 0x42202d20
+    .word 0x2d206e69
+    .word 0x6544203e
+    .word 0x30310a63
+    .word 0x44202d20
+    .word 0x2d206365
+    .word 0x6942203e
+    .word 0x23230a6e
+    .word 0x23232323
+    .word 0x23232323
+    .word 0x23232323
+    .word 0x23232323
+    .word 0x23232323
+    .word 0x23232323
+    .word 0x23232323
+    .word 0x0a2323
+
+    .text
+    addi t0, zero, 3
+    lui a0, %hi(.menu)
+    addi a0, a0, %lo(.menu)
+    addi a1, zero, 271
+    ecall
+
+    ret
 
 abs: # return the abs value of a3 in a3
     addi t5, zero, 1
@@ -269,6 +363,8 @@ division: # return a0 divided by a1 (at the end the value of a0 is the quocient 
 main:
     addi sp, sp, -4
     sw ra, sp, 0
+
+    call printMenu
 
     addi t0, zero, 4
     ecall

@@ -1,0 +1,15 @@
+################################
+Projeto MC404 - RA 168838 e RA 187793 - 1.0
+
+Escolha uma operacao:
+1 - Soma
+2 - Subtracao
+3 - Multiplicacao
+4 - Divisao
+5 - Bin -> Hex
+6 - Hex -> Bin
+7 - Dec -> Hex
+8 - Hex -> Dec
+9 - Bin -> Dec
+10 - Dec -> Bin
+################################
