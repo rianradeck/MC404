@@ -211,7 +211,7 @@ main:
 	add a1, zero, a0
 	ecall
 
-	call fastExponentiation
+	call division
 
     lw ra, sp, 0
     addi sp, sp, 4
