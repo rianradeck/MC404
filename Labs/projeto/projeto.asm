@@ -1,16 +1,3 @@
-.section .data
-    select:
-        .word 1
-        .word 2
-        .word 3
-        .word 4
-        .word 5
-        .word 6
-        .word 7
-        .word 8
-        .word 9
-        .word 10
-
 .section .text
 
 printMenu:
@@ -53,29 +40,33 @@ printMenu:
     .word 0x44202d20
     .word 0x73697669
     .word 0x350a6f61
-    .word 0x42202d20
-    .word 0x2d206e69
-    .word 0x6548203e
-    .word 0x20360a78
-    .word 0x6548202d
-    .word 0x3e2d2078
+    .word 0x45202d20
+    .word 0x6e6f7078
+    .word 0x61696365
+    .word 0x0a6f6163
+    .word 0x202d2036
+    .word 0x206e6942
+    .word 0x48203e2d
+    .word 0x370a7865
+    .word 0x48202d20
+    .word 0x2d207865
+    .word 0x6942203e
+    .word 0x20380a6e
+    .word 0x6544202d
+    .word 0x3e2d2063
+    .word 0x78654820
+    .word 0x2d20390a
+    .word 0x78654820
+    .word 0x203e2d20
+    .word 0x0a636544
+    .word 0x2d203031
     .word 0x6e694220
-    .word 0x2d20370a
+    .word 0x203e2d20
+    .word 0x0a636544
+    .word 0x2d203131
     .word 0x63654420
     .word 0x203e2d20
-    .word 0x0a786548
-    .word 0x202d2038
-    .word 0x20786548
-    .word 0x44203e2d
-    .word 0x390a6365
-    .word 0x42202d20
-    .word 0x2d206e69
-    .word 0x6544203e
-    .word 0x30310a63
-    .word 0x44202d20
-    .word 0x2d206365
-    .word 0x6942203e
-    .word 0x23230a6e
+    .word 0x0a6e6942
     .word 0x23232323
     .word 0x23232323
     .word 0x23232323
@@ -83,13 +74,14 @@ printMenu:
     .word 0x23232323
     .word 0x23232323
     .word 0x23232323
-    .word 0x0a2323
+    .word 0x23232323
+    .word 0x0a
 
     .text
     addi t0, zero, 3
     lui a0, %hi(.menu)
     addi a0, a0, %lo(.menu)
-    addi a1, zero, 271
+    addi a1, zero, 289
     ecall
 
     ret
@@ -364,16 +356,37 @@ main:
     addi sp, sp, -4
     sw ra, sp, 0
 
+.startMain:
     call printMenu
-
     addi t0, zero, 4
     ecall
-    add a1, zero, a0
-    ecall
+    addi a1, zero, 0
+    addi a1, a1, 1
 
-    call fastExponentiation
-    add a1, a0, zero
-    call printInt
+    beq a0, a1, getSum
+    addi a1, a1, 1
+    beq a0, a1, getSub
+    addi a1, a1, 1
+    beq a0, a1, getMult
+    addi a1, a1, 1
+    beq a0, a1, getDiv
+    addi a1, a1, 1
+    beq a0, a1, getExpo
+    addi a1, a1, 1
+    beq a0, a1, binToHex
+    addi a1, a1, 1
+    beq a0, a1, hexToBin
+    addi a1, a1, 1
+    beq a0, a1, decToHex
+    addi a1, a1, 1
+    beq a0, a1, hexToDec
+    addi a1, a1, 1
+    beq a0, a1, binToDec
+    addi a1, a1, 1
+    beq a0, a1, decToBin
+    
+    addi a1, a1, 1
+    beq a0, a1, .startMain
 
     lw ra, sp, 0
     addi sp, sp, 4
