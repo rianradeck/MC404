@@ -1,27 +1,27 @@
 .section .text
 
 fastExponentiation:
-	add s8, zero, a0
-	add s9, zero, a1
-	addi s10, zero, 1
+	add t0, zero, a0
+	add t1, zero, a1
+	addi t2, zero, 1
 
 .ExpLoop:
-	addi s6, zero, 1
-	andi s7, s9, 1
-	beq s7, s6, .oddA1
-	bne s7, s6, .evenA1 
+	addi t3, zero, 1
+	andi t4, t1, 1
+	beq t4, t3, .oddA1
+	bne t4, t3, .evenA1 
 
 .evenA1:
 	addi sp, sp, -4
 	sw ra, sp, 0
 
-	add a0, zero, s8
-	add a1, zero, s8
+	add a0, zero, t0
+	add a1, zero, t0
 
 	call mult
 
-	add s8, zero, a0
-	srli s9, s9, 1
+	add t0, zero, a0
+	srli t1, t1, 1
 
 	lw ra, sp, 0
 	addi sp, sp, 4
@@ -33,22 +33,22 @@ fastExponentiation:
 	addi sp, sp, -4
 	sw ra, sp, 0
 
-	add a0, zero, s8
-	add a1, zero, s10
+	add a0, zero, t0
+	add a1, zero, t2
 
 	call mult
 
-	add s10, zero, a0
-	addi s9, s9, -1
+	add t2, zero, a0
+	addi t1, t1, -1
 
 	lw ra, sp, 0
 	addi sp, sp, 4
 
 .loopContinue:
-	blt zero, s9, .ExpLoop
+	blt zero, t1, .ExpLoop
 
 .endExponentiation:
-	add a0, zero, s10
+	add a0, zero, t2
 	jr ra
 
 division: # return a0 divided by a1 (at the end the value of a0 is the quocient and a1 the remainder)
@@ -211,7 +211,7 @@ main:
 	add a1, zero, a0
 	ecall
 
-	call division
+	call fastExponentiation
 
     lw ra, sp, 0
     addi sp, sp, 4
