@@ -286,6 +286,8 @@ subt: # inverts the signal of a1 and call sum
     ret
 
 mult: # returns in a0 the value of a0 times a1 (at the end a1 = 1 if we had overflow, else a1 = 0)
+    addi sp, sp, -4
+    sw ra, sp, 0
     addi s2, zero, 0 # initialize the return value
 
     addi s3, zero, 0 # s3 is the counter
@@ -302,8 +304,6 @@ mult: # returns in a0 the value of a0 times a1 (at the end a1 = 1 if we had over
     and t6, t6, a1 # signal of a1
     xor s11, t5, t6 # signal of a0 * a1
     
-    addi sp, sp, -4
-    sw ra, sp, 0
 
     add a3, a0, zero
     call abs
@@ -313,8 +313,6 @@ mult: # returns in a0 the value of a0 times a1 (at the end a1 = 1 if we had over
     call abs
     add a1, a3, zero
 
-    lw ra, sp, 0
-    addi sp, sp, 4
 
 .loopMult:
     bge s3, s4, .endMult
@@ -347,12 +345,16 @@ mult: # returns in a0 the value of a0 times a1 (at the end a1 = 1 if we had over
     addi a0, a0, 1
 
 .positiveMult:
+    lw ra, sp, 0
+    addi sp, sp, 4
     ret
 
 .multOverflow:
     call printOverflow
     add a0, zero, zero
     addi a1, zero, 1
+    lw ra, sp, 0
+    addi sp, sp, 4
     ret
 
 division: # return a0 divided by a1 (at the end the value of a0 is the quotient and a1 the remainder) a1 is the divisor
