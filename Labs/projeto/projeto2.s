@@ -1,5 +1,83 @@
 .section .text
 
+readInt:
+    .rodata
+.typeInt:
+    .word 0x69676944
+    .word 0x75206574
+    .word 0x6e69206d
+    .word 0x72696574
+    .word 0x6428206f
+    .word 0x6d696365
+    .word 0x0a296c61
+    
+    .text
+    addi t0, zero, 3
+    lui a0, %hi(.typeInt)
+    addi a0, a0, %lo(.typeInt)
+    addi a1, zero, 28
+    ecall
+
+    addi t0, zero, 4
+    ecall
+
+    ret
+
+read8: # reads a size 8 string and saves the adress at s0
+    .rodata
+.typeHex:
+    .word 0x69676944
+    .word 0x75206574
+    .word 0x6e69206d
+    .word 0x72696574
+    .word 0x6828206f
+    .word 0x64617865
+    .word 0x6d696365
+    .word 0x0a296c61
+
+    .text
+    addi t0, zero, 3
+    lui a0, %hi(.typeHex)
+    addi a0, a0, %lo(.typeHex)
+    addi a1, zero, 32
+    ecall
+
+    addi t0, zero, 7
+    addi a0, zero, 8
+    ecall
+    addi t0, zero, 6
+    addi a1, zero, 8
+    ecall
+
+    addi s1, a0, 0
+
+read32: # reads a size 32 string and saves the adress at s0
+    .rodata
+.typeBin: 
+    .word 0x69676944
+    .word 0x75206574
+    .word 0x6e69206d
+    .word 0x72696574
+    .word 0x6228206f
+    .word 0x72616e69
+    .word 0x0a296f69
+
+    .text
+    addi t0, zero, 3
+    lui a0, %hi(.typeHex)
+    addi a0, a0, %lo(.typeHex)
+    addi a1, zero, 28
+    ecall
+
+    addi t0, zero, 7
+    addi a0, zero, 32
+    ecall
+    addi t0, zero, 6
+    addi a1, zero, 32
+    ecall
+
+    addi s1, a0, 0
+
 printResult:
     .rodata
 .resulta:

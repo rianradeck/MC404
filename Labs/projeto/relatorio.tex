@@ -1,0 +1,132 @@
+\documentclass[12pt, letterpaper]{article}
+\usepackage[utf8]{inputenc}
+
+\usepackage{amsmath}
+\usepackage{indentfirst}
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,  
+    urlcolor=cyan,
+    }
+
+\title{Projeto - MC404}
+\author{Rian Radeck Santos Costa - 187793 \\ Cirilo Max Macêdo de Morais Filho - 168838}
+\date{30 de Junho de 2022}
+\renewcommand*\contentsname{Sumário}
+
+\begin{document}
+
+\maketitle
+\newpage
+\tableofcontents
+\newpage
+
+\section{Esclarecimentos}
+	Todas as operações e conversões foram preparadas para inteiros sinalizados de 32 bits.
+
+	Nós decidimos adicionar uma operação de exponenciação pios achamos que poderia agregar positivamente no conjunto do trabalho.
+
+	O projeto foi dividido em duas partes:
+	\begin{itemize}
+		\item{Operações  (projeto1.s)}
+		\item{Conversões (projeto2.s)}
+	\end{itemize}
+	essa divisão foi feita pois o simulador RISC-V utilizado não aceita códigos muito extensos.
+
+	Definições:
+	\begin{itemize}
+		\item{$n$ é a quantidade de bits de $a_0$.}
+		\item{$m$ é a quantidade de bits de $a_1$.}
+	\end{itemize}
+
+\newpage
+\section{Operações}
+	Estas operações estão no arquivo projeto1.s, elas foram feitas baseadas com o conhecimento adiquirido dentro de sala e com base no material fornecido pelo professor Ricardo Pannain no classroom.
+	\subsection{Soma}
+		A operação feita no progrma é $a_0 \leftarrow a_0 + a_1$.
+
+		O overflow foi verificado somando os valores absolutos dos registradores e caso os seus sinais fossem iguais, o resultado não poderia ser negativo.
+
+		Complexidade: $O(1)$
+	\subsection{Subtração}
+		A operação feita no progrma é $a_0 \leftarrow a_0 - a_1$.
+
+		A execução dessa operação é feita invertendo o sinal do registrador $a_1$ e chamando a função soma.
+
+		Complexidade: $O(1)$
+	\subsection{Multiplicação}
+		A operação feita no programa é $a_0 \leftarrow a_0 \times a_1$.
+
+		O algoritmo utilizado foi o algoritmo de Booth, sendo assim o tratamento de sinal era feito no fim do algoritmo, após a multiplicação dos fatores. O overflow foi verificado em cada parte da soma das parcelas da multiplicação, assim se em algum momento o produto se tornasse negativo havia ocorrido o overflow.
+
+		Complexidade: $O(n)$.
+	\subsection{Divisão}
+		A operação feita no programa é $a_0 \leftarrow \left\lfloor \frac{a_0}{a_1} \right\rfloor$ e $a_1 \leftarrow a_0 \mod a_1$ 
+
+		O algoritmo utilizado foi o seguinte:
+		\begin{itemize}
+			\item{Verifica se o divisor é 0.}
+			\item{Se o divisor for menor ou igual ou dividendo.}
+			\begin{itemize}
+				\item{Acrescenta 1 no quociente.}
+				\item{Subtrai o divisor dos bits considerados até o memento do dividendo.}
+			\end{itemize}
+			\item{Caso contrário}
+			\begin{itemize}
+				\item{Acrescenta 0 no quociente.}
+				\item{É considerado o próximo bit mais significativo do dividendo}
+			\end{itemize}
+			\item{Quando não houver mais bits para se considerar do dividendo, o que sobrou do dividendo é o resto}
+		\end{itemize}
+
+		Complexidade: $O(n)$
+	\subsection{Exponenciação}
+		A operação feita no programa é $a_0 \leftarrow {a_0}^{a_1}$
+
+		O algoritmo utilizado foi o de exponenciação rápida. Ele funciona da seguinte maneira:
+		\begin{itemize}
+			\item{Caso o expoente seja 0, o resultado é 1}
+			\item{Caso o expoente seja par, dividimos por 2 e calculamos o seu quadrado com uma multiplicação}
+			\item{Caso o expoente seja ímpar, subtraimos 1 do expoente e calculamos o caso par, depois multiplicamos pela base.}
+		\end{itemize}
+		Complexidade: $O(n\log_2{m})$
+
+\newpage
+\section{Conversões}
+	\seubsection{Algoritmo}
+		Sabemos que um número é representado em certa base da seguinte maneira:
+		$$
+		N = c_0 \times b^0 + c_1 \times b^1 + c_2 \times b^2 + \cdots
+		$$
+		onde $b$ é a base e $c_0$ é seu algarismo menos significativo e $0\leq c_k < b$ $\forall$  $k$ $\in \mathbb{Z}$.
+
+		O algoritmo usado na conversão de bases foi o seguinte:
+		\begin{itemize}
+			\item{Tome um expoente $e$ grande o suficiente $(N \leq b^e)$.}
+			\item{Tome o seu algarismo $c$ como $b - 1$.}
+			\item{Diminua seu algarismo até $c \times b^e \leq N$.}
+			\item{Acrescente esse algarismo na resposta.}
+			\item{Diminua $N$ de $c \times b^e$.}
+			\item{Subtraia 1 do expoente}
+			\item{Se o expoente é negativo, o algoritmo para.}
+		\end{itemize}
+	Todas as conversões foram feitas utilizando esse algoritmo.
+
+	\subsection{Binário}
+		\begin{itemize}
+			\item{Leitura: string.}
+			\item{Escrita: string.}
+		\end{itemize}
+	\subsection{Hexadecimal}
+		\begin{itemize}
+			\item{Leitura: string.}
+			\item{Escrita: cadeia de caracteres.}
+		\end{itemize}
+
+	\subsection{Decimal}
+		\begin{itemize}
+			\item{Leitura: RISC-V.}
+			\item{Escrita: RISC-V.}
+		\end{itemize}
+\end{document}
