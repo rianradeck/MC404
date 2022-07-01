@@ -1,5 +1,20 @@
 .section .text
 
+printDivisionByZero:
+    .rodata
+.zerodivision: # 15
+    .word 0x49564944
+    .word 0x204f4153
+    .word 0x20524f50
+    .word 0x0a2130
+
+    .text
+    addi t0, zero, 3
+    lui a0, %hi(.zerodivision)
+    addi a0, a0, %lo(.zerodivision)
+    addi a1, zero, 15
+    ecall
+
 printEndl:
     addi t0, zero, 2
     addi a0, zero, 13 
@@ -460,62 +475,43 @@ getNums:
     ret
 
 getSum:
-    addi sp, sp, -4
-    sw ra, sp, 0
-    
     call printResult
     call sum
     call printInt
 
-    lw ra, sp, 0
-    addi sp, sp, 4
     j .startMain
 
 getSub:
-    addi sp, sp, -4
-    sw ra, sp, 0
-
     call printResult
     call subt
     call printInt
 
-    lw ra, sp, 0
-    addi sp, sp, 4
     j .startMain
 
 getMult:
-    addi sp, sp, -4
-    sw ra, sp, 0
-
     call printResult
     call mult
     call printInt
 
-    lw ra, sp, 0
-    addi sp, sp, 4
     j .startMain
 
 getDiv:
-    addi sp, sp, -4
-    sw ra, sp, 0
+    beq a1, zero, .divisionByZero
 
     call division
     call printDivision
 
-    lw ra, sp, 0
-    addi sp, sp, 4
     j .startMain
 
-getExpo:
-    addi sp, sp, -4
-    sw ra, sp, 0
+.divisionByZero:
+    call printDivisionByZero
 
+    j .startMain
+getExpo:
     call printResult
     call fastExponentiation
     call printInt
 
-    lw ra, sp, 0
-    addi sp, sp, 4
     j .startMain
 
 main:
