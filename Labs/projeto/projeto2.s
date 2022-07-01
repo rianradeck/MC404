@@ -1,5 +1,123 @@
 .section .text
 
+printResult:
+    .rodata
+.resulta:
+    .word 0x75736552
+    .word 0x6461746c
+    .word 0x0a3a6f
+
+    .text
+    addi t0, zero, 3
+    lui a0, %hi(.digite)
+    addi a0, a0, %lo(.digite)
+    addi a1, zero, 11
+    ecall
+
+    ret
+
+digiteNumero:
+    .rodata
+.digite:
+    .word 0x69676944
+    .word 0x75206574
+    .word 0x756e206d
+    .word 0x6f72656d
+    .word 0x0a3a
+
+    .text
+    addi t0, zero, 3
+    lui a0, %hi(.digite)
+    addi a0, a0, %lo(.digite)
+    addi a1, zero, 18
+    ecall
+
+    ret
+
+printMenu:
+    .rodata
+.menu: # 280
+    .word 0x23232323
+    .word 0x23232323
+    .word 0x23232323
+    .word 0x23232323
+    .word 0x6f72500a
+    .word 0x6f74656a
+    .word 0x34434d20
+    .word 0x2d203430
+    .word 0x72615020
+    .word 0x31206574
+    .word 0x52202d20
+    .word 0x36312041
+    .word 0x38333838
+    .word 0x52206520
+    .word 0x38312041
+    .word 0x33393737
+    .word 0x73450a0a
+    .word 0x686c6f63
+    .word 0x6d752061
+    .word 0x706f2061
+    .word 0x63617265
+    .word 0x0a3a6f61
+    .word 0x202d2031
+    .word 0x61786548
+    .word 0x69636564
+    .word 0x206c616d
+    .word 0x61726170
+    .word 0x6e694220
+    .word 0x6f697261
+    .word 0x2d20320a
+    .word 0x6e694220
+    .word 0x6f697261
+    .word 0x72617020
+    .word 0x65482061
+    .word 0x65646178
+    .word 0x616d6963
+    .word 0x20330a6c
+    .word 0x6544202d
+    .word 0x616d6963
+    .word 0x6170206c
+    .word 0x42206172
+    .word 0x72616e69
+    .word 0x340a6f69
+    .word 0x42202d20
+    .word 0x72616e69
+    .word 0x70206f69
+    .word 0x20617261
+    .word 0x69636544
+    .word 0x0a6c616d
+    .word 0x202d2035
+    .word 0x69636544
+    .word 0x206c616d
+    .word 0x61726170
+    .word 0x78654820
+    .word 0x63656461
+    .word 0x6c616d69
+    .word 0x2d20360a
+    .word 0x78654820
+    .word 0x63656461
+    .word 0x6c616d69
+    .word 0x72617020
+    .word 0x65442061
+    .word 0x616d6963
+    .word 0x20370a6c
+    .word 0x6153202d
+    .word 0x230a7269
+    .word 0x23232323
+    .word 0x23232323
+    .word 0x23232323
+    .word 0x0a232323
+
+    .text
+    addi t0, zero, 3
+    lui a0, %hi(.menu)
+    addi a0, a0, %lo(.menu)
+    addi a1, zero, 280
+    ecall
+
+    ret
+
+
 decToBin:
     addi a0, zero, 32
     addi t0, zero, 7
@@ -19,10 +137,10 @@ decToBin:
     add a0, zero, a1
 
 .loopDB:
-    beq s1, zero, endLoopDB
+    beq s1, zero, .endLoopDB
     addi a3, zero, 48
 
-    blt a2, s1, conDB
+    blt a2, s1, .conDB
     addi s3, zero, 1
     sub a2, a2, s1
 
@@ -30,31 +148,32 @@ decToBin:
 
 .conDB:
     
-    beq s3, zero, con2DB
+    beq s3, zero, .con2DB
     sb a3, a0, 0
     addi a0, a0, 1
         
 .con2DB:
 
     srli s1, s1, 1
-    j loopDB
+    j .loopDB
 
 .endLoopDB:
-
-    addi t0, zero, 3
     add a0, zero, a1
+    addi a1, zero, 20
+    addi t0, zero, 3
     ecall
 
-    jr ra
+    ret
 
-binToDec:
-    addi a0,zero,32
-    addi t0,zero,7
-    ecall
+binToDec: # prints a0 in decimal
+    #addi a0,zero,32
+    #addi t0,zero,7
+    #ecall
 
-    addi a1,zero,32
-    addi t0,zero,6
-    ecall
+    # read
+    #addi a1,zero,32
+    #addi t0,zero,6
+    #ecall
 
     add s1, zero, a0
 
@@ -66,18 +185,21 @@ binToDec:
 .loopBD:
     lb a2, s1, 0
     andi a2, a2,0xff
-    beq a2, s3, endLoopBD
+    beq a2, s3, .endLoopBD
     slli a1, a1, 1
-    beq a2, s2, conBD
+    beq a2, s2, .conBD
     addi a1, a1, 1
 
 .conBD:
 
-    beq s1, a0, endLoopBD
+    beq s1, a0, .endLoopBD
     addi s1, s1, 1
-    j LoopBD
+    j .LoopBD
     
 .endLoopBD:
+    addi t0, zero, 1
+    add a0, zero, a1
+    ecall
     ret
 
 printHex:
@@ -223,17 +345,98 @@ hexToDec: # takes a string in s1 and converts to decimal (a0)
     addi a0, s4, 0
     ret
 
-main:
-
+ghexToBin:
     addi sp, sp, -4
     sw ra, sp, 0
-    addi t0, zero, 4
-    ecall
     
-    call decToHex
+    call hexToBin
+
     lw ra, sp, 0
     addi sp, sp, 4
+    j .startMain
 
+gbinToHex:
+    addi sp, sp, -4
+    sw ra, sp, 0
     
+    #call printResult
+    call binToHex
+
+    lw ra, sp, 0
+    addi sp, sp, 4
+    j .startMain
+
+gDecToBin:
+    addi sp, sp, -4
+    sw ra, sp, 0
+    
+    call decToBin
+
+    lw ra, sp, 0
+    addi sp, sp, 4
+    j .startMain
+
+gbinToDec:
+    addi sp, sp, -4
+    sw ra, sp, 0
+   
+    call binToDec
+
+    lw ra, sp, 0
+    addi sp, sp, 4
+    j .startMain
+
+gHexToDec:
+    addi sp, sp, -4
+    sw ra, sp, 0
+    
+    call hexToDec
+
+    lw ra, sp, 0
+    addi sp, sp, 4
+    j .startMain
+
+gDecToHex:
+    addi sp, sp, -4
+    sw ra, sp, 0
+    
+    call decToHex
+
+    lw ra, sp, 0
+    addi sp, sp, 4
+    j .startMain
+
+
+main:
+    addi sp, sp, -4
+    sw ra, sp, 0
+
+.startMain:
+    call printMenu
+    addi t0, zero, 4
+    ecall
+    addi t4, zero, 7
+    beq a0, t4, .endMain
+    addi t3, a0, 0
+    addi t4, zero, 1
+
+    call digiteNumero
+
+    #beq t3, t4, hexToBin
+    addi t4, t4, 1
+    #beq t3, t4, binToHex
+    addi t4, t4, 1
+    beq t3, t4, gDecToBin
+    addi t4, t4, 1
+    beq t3, t4, gbinToDec
+    addi t4, t4, 1
+    beq t3, t4, gdecToHex
+    addi t4, t4, 1
+    beq t3, t4, ghexToDec
+
+    j .startMain
+
 .endMain:
+    lw ra, sp, 0
+    addi sp, sp, 4
     ret
