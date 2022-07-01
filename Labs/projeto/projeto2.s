@@ -1,5 +1,12 @@
 .section .text
 
+printEndl:
+    addi t0, zero, 2
+    addi a0, zero, 13 
+    ecall
+
+    ret
+
 readInt:
     .rodata
 .typeInt:
@@ -50,6 +57,7 @@ read8: # reads a size 8 string and saves the adress at s0
     ecall
 
     addi s1, a0, 0
+    ret
 
 read32: # reads a size 32 string and saves the adress at s0
     .rodata
@@ -64,8 +72,8 @@ read32: # reads a size 32 string and saves the adress at s0
 
     .text
     addi t0, zero, 3
-    lui a0, %hi(.typeHex)
-    addi a0, a0, %lo(.typeHex)
+    lui a0, %hi(.typeBin)
+    addi a0, a0, %lo(.typeBin)
     addi a1, zero, 28
     ecall
 
@@ -77,6 +85,13 @@ read32: # reads a size 32 string and saves the adress at s0
     ecall
 
     addi s1, a0, 0
+    ret
+
+print32: # print string in adress a0
+    addi t0, zero, 3
+    addi a1, zero, 32
+    ecall
+    ret
 
 printResult:
     .rodata
@@ -197,14 +212,13 @@ printMenu:
 
 
 decToBin:
-    addi a0, zero, 32
+    add a2, zero, a0
+
+    addi a0, zero, 64
     addi t0, zero, 7
     ecall
-    add a1, a0, zero  
-
-    addi t0, zero, 4
-    ecall
-    add a2, zero, a0
+    addi a0, a0, 32
+    add a1, a0, zero
 
     addi s1, zero, 1
     slli s1, s1, 30
@@ -236,12 +250,12 @@ decToBin:
     j .loopDB
 
 .endLoopDB:
-    add a0, zero, a1
-    addi a1, zero, 31
-    #addi t0, zero, 3
-    #ecall
 
-    ret
+    # addi t0, zero, 3
+    add a0, zero, a1
+    # ecall
+
+    jr ra
 
 binToDec: # prints a0 in decimal
     #addi a0,zero,32
@@ -424,66 +438,82 @@ hexToDec: # takes a string in s1 and converts to decimal (a0)
     ret
 
 ghexToBin:
-    addi sp, sp, -4
-    sw ra, sp, 0
     
+    call read8
     call hexToDec
     call decToBin
+    call print32
+    call printEndl
 
-    lw ra, sp, 0
-    addi sp, sp, 4
     j .startMain
 
 gbinToHex:
-    addi sp, sp, -4
-    sw ra, sp, 0
     
     #call printResult
+    call read32
     call binToDec
-    call decToBin
+    call decToHex
+    call printEndl
 
-    lw ra, sp, 0
-    addi sp, sp, 4
     j .startMain
 
 gDecToBin:
-    addi sp, sp, -4
-    sw ra, sp, 0
     
+    call readInt
     call decToBin
+    call print32
+    call printEndl
 
-    lw ra, sp, 0
-    addi sp, sp, 4
     j .startMain
 
 gbinToDec:
-    addi sp, sp, -4
-    sw ra, sp, 0
    
+    call read32
     call binToDec
+    call printInt
 
-    lw ra, sp, 0
-    addi sp, sp, 4
     j .startMain
 
-gHexToDec:
-    addi sp, sp, -4
-    sw ra, sp, 0
-    
-    call hexToDec
+printInt: # prints the value of a0
+    addi s3, a0, 0 # save the original value of a0
+    addi s2, zero, 1
+    slli s2, s2, 31
+    and s2, s2, a0
 
-    lw ra, sp, 0
-    addi sp, sp, 4
+    beq s2, zero, .positive
+
+.negative:
+    addi t0, zero, 2
+    addi a0, zero, 45
+    ecall #print -
+    addi a0, s3, 0
+
+    # invert all and sum 1
+    xori a0, a0, 0xffffffff
+    addi a0, a0, 1
+
+.positive:
+    addi t0, zero, 1
+    ecall
+    addi a0, s3, 0
+    
+    ret
+
+gHexToDec:
+    
+    call read8
+    call hexToDec
+    call printInt
+
     j .startMain
 
 gDecToHex:
-    addi sp, sp, -4
-    sw ra, sp, 0
     
+    call readInt
     call decToHex
+    call print32
+    call printEndl
 
-    lw ra, sp, 0
-    addi sp, sp, 4
     j .startMain
 
 
@@ -500,11 +530,11 @@ main:
     addi t3, a0, 0
     addi t4, zero, 1
 
-    call digiteNumero
+    # call digiteNumero
 
-    #beq t3, t4, hexToBin
+    beq t3, t4, gHexToBin
     addi t4, t4, 1
-    #beq t3, t4, binToHex
+    beq t3, t4, gBinToHex
     addi t4, t4, 1
     beq t3, t4, gDecToBin
     addi t4, t4, 1
