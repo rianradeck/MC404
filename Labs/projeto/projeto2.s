@@ -9,8 +9,8 @@ printResult:
 
     .text
     addi t0, zero, 3
-    lui a0, %hi(.digite)
-    addi a0, a0, %lo(.digite)
+    lui a0, %hi(.resulta)
+    addi a0, a0, %lo(.resulta)
     addi a1, zero, 11
     ecall
 
@@ -159,9 +159,9 @@ decToBin:
 
 .endLoopDB:
     add a0, zero, a1
-    addi a1, zero, 20
-    addi t0, zero, 3
-    ecall
+    addi a1, zero, 31
+    #addi t0, zero, 3
+    #ecall
 
     ret
 
@@ -175,7 +175,7 @@ binToDec: # prints a0 in decimal
     #addi t0,zero,6
     #ecall
 
-    add s1, zero, a0
+    #add s1, zero, a0
 
     add a1, zero, zero
     addi s2, zero, 48
@@ -197,9 +197,9 @@ binToDec: # prints a0 in decimal
     j .LoopBD
     
 .endLoopBD:
-    addi t0, zero, 1
+    #addi t0, zero, 1
     add a0, zero, a1
-    ecall
+    #ecall
     ret
 
 printHex:
@@ -349,7 +349,8 @@ ghexToBin:
     addi sp, sp, -4
     sw ra, sp, 0
     
-    call hexToBin
+    call hexToDec
+    call decToBin
 
     lw ra, sp, 0
     addi sp, sp, 4
@@ -360,7 +361,8 @@ gbinToHex:
     sw ra, sp, 0
     
     #call printResult
-    call binToHex
+    call binToDec
+    call decToBin
 
     lw ra, sp, 0
     addi sp, sp, 4
